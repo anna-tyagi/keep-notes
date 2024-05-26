@@ -1,3 +1,5 @@
+/* styles.css */
+
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -44,10 +46,16 @@ body {
   padding: 10px;
   margin: 10px;
   width: 200px;
+  position: relative; /* Make the note container position relative */
 }
 
 .note h3 {
   margin-top: 0;
+}
+/*for Image*/
+.note img.note-image {
+  max-width: 100%;
+  margin-top: 10px;
 }
 
 form {
@@ -67,4 +75,57 @@ form button {
   color: #fff;
   border: none;
   cursor: pointer;
+}
+
+button.edit-button {
+  display: block; /* Ensure the button starts on a new line */
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px; /* Margin to create space above the button */
+}
+
+button.edit-button:hover {
+  background-color: #011101;
+}
+
+.note-image {
+  display: block;
+  max-width: 100%;
+  margin-bottom: 10px;
+}
+
+.context-menu {
+  position: absolute;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.context-menu:hover {
+  background: #eee;
+}
+
+button.add-image-button {
+  display: block; /* Ensure the button starts on a new line */
+  padding: 5px 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px; /* Margin to create space above the button */
+}
+
+button.add-image-button:hover {
+  background-color: #011101;
+}
+
+#add-image-outside{
+  margin-bottom: 8px;
 }
