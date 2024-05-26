@@ -1,13 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+
 import './App.css';
 import LoginPage from './authentication/LoginPage';
 import SignupPage from './authentication/Signup';
 import Note from './components/Note';
 
 const App = () => {
-
   return (
     <Router>
         <Routes>
@@ -20,6 +20,7 @@ const App = () => {
             </div>
           } />
         </Routes>
+
     </Router>
   );
 };
