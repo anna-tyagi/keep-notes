@@ -1,11 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Sidebar from './components/Sidebar';
+import Sidebar from './sidebar/Sidebar';
 
 import './App.css';
 import LoginPage from './authentication/LoginPage';
 import SignupPage from './authentication/Signup';
-import Note from './components/Note';
 
 const App = () => {
   return (
@@ -16,7 +15,7 @@ const App = () => {
           <Route path="/notes" element={
             <div className="main-content">
               <Sidebar />
-              <Note />
+              {/* <Note /> */}
             </div>
           } />
         </Routes>
