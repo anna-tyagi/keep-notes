@@ -1,0 +1,106 @@
+/* Editor.css */
+.editor {
+    height: calc(100vh - 4px);
+    box-sizing: border-box;
+    background-color: #e6f1ff;
+    border-left: 1px solid #ddd;
+    /* color: aliceblue; */
+    width: calc(100% - 304px);
+    margin: 2px;
+    padding: 20px;
+    position: fixed; /* Ensure it stays fixed */
+    top: 0; /* Align to the top */
+    left: 300px; /* Align to the left */
+    bottom: 0; /* Occupy full height */
+  }
+  
+  .ql-container {
+    height: calc(100vh - 84px);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ql-toolbar {
+    height: 40px;
+    overflow: hidden;
+  }
+  .ql-editor {
+    flex: 1;
+    overflow-y: auto;
+    font-size: 16px; /* Default font size */
+    color: #333;    /* Default font color */
+  }
+  
+  /* Customize toolbar icons color */
+  .ql-toolbar button {
+    color: #666; /* Default toolbar icon color */
+  }
+  
+  .ql-toolbar button:hover {
+    color: #000; /* Toolbar icon color on hover */
+  }
+  
+  .ql-toolbar .ql-stroke {
+    stroke: #666; /* Default stroke color for icons */
+  }
+  
+  .ql-toolbar .ql-fill {
+    fill: #666; /* Default fill color for icons */
+  }
+  
+  .ql-toolbar .ql-stroke-miter {
+    stroke: #666; /* Default stroke-miter color for icons */
+  }
+  
+  .ql-toolbar .ql-fill,
+  .ql-toolbar .ql-stroke.ql-fill {
+    fill: #666; /* Default fill color for icons */
+  }
+  
+  .ql-toolbar .ql-picker-label,
+  .ql-toolbar .ql-picker-item {
+    color: #666; /* Default color for dropdowns */
+  }
+  
+  /* Add hover descriptions to toolbar buttons */
+  .ql-toolbar button.ql-bold::before {
+    content: 'Bold';
+  }
+  
+  .ql-toolbar button.ql-italic::before {
+    content: 'Italic';
+  }
+  
+  .ql-toolbar button.ql-underline::before {
+    content: 'Underline';
+  }
+  
+  .ql-toolbar button.ql-strike::before {
+    content: 'Strike';
+  }
+  
+  .ql-toolbar button.ql-blockquote::before {
+    content: 'Blockquote';
+  }
+  
+  .ql-toolbar button.ql-code-block::before {
+    content: 'Code Block';
+  }
+  
+  .ql-toolbar button:hover::before {
+    visibility: visible;
+    opacity: 1;
+  }
+  
+  .ql-toolbar button::before {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    background: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 3px;
+    top: -30px;
+    white-space: nowrap;
+    transition: opacity 0.3s;
+  }
