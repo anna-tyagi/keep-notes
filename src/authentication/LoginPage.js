@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link for routing
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate } from "react-router-dom";
 import './Auth.css';
+import Authentication from '../firebase/authentication';
+import LoadingComponent from '../component/loading';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isloading, setLoading] = useState(false);
+
+  const auth = new Authentication();
+  let navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
     // Add login logic here
+    setLoading(true);
+    auth.signInUser(email, password).then((result) => {
+      if (result) {
+        return navigate("/notes");
+      }
+      else {
+        toast.error("Your email is not verified, verify your email using link sent on your email");
+      }
+    }).catch((e) => {
+      toast.error(e);
+    }).finally(() => {
+      setLoading(false);
+    })
   };
 
   const toggleShowPassword = () => {
@@ -54,6 +76,8 @@ const LoginPage = () => {
           <button type="submit" className="login-button">Login</button>
         </form>
       </div>
+      {isloading && <LoadingComponent message={"Signing into your account"} />}
+      <ToastContainer />
     </div>
   );
 };
