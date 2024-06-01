@@ -1,16 +1,38 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link for routing
+import { Link, useNavigate } from 'react-router-dom'; // Import Link for routing
 import './Auth.css';
+import Authentication from '../firebase/authentication';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import LoadingComponent from '../component/loading';
 
 const SignupPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isloading, setLoading] = useState(false);
+
+  const auth = new Authentication();
+  let navigate = useNavigate();
 
   const handleSignup = (e) => {
     e.preventDefault();
     // Add signup logic here
+    setLoading(true);
+    auth.createUser(email, password, fullName).then(() => {
+      auth.logout().then(() => {
+        toast.success("Verify your email and login again");
+      }).catch((e) => {
+        toast.error(e);
+      }).finally(() =>{
+        setLoading(false);
+      })
+      return navigate("/");
+    }).catch((e) => {
+      toast.error(e);
+      setLoading(false);
+    });
   };
 
   const toggleShowPassword = () => {
@@ -65,6 +87,8 @@ const SignupPage = () => {
           <button type="submit" className="login-button">Sign Up</button>
         </form>
       </div>
+      {isloading && <LoadingComponent message={"creating your account"} />}
+      <ToastContainer />
     </div>
   );
 };

@@ -2,32 +2,39 @@
 .editor {
     height: calc(100vh - 4px);
     box-sizing: border-box;
-    background-color: #e6f1ff;
+    background-color: #ffffffee;
     border-left: 1px solid #ddd;
     /* color: aliceblue; */
-    width: calc(100% - 304px);
+    width: calc(100% - 300px - 4px);
     margin: 2px;
     padding: 20px;
     position: fixed; /* Ensure it stays fixed */
     top: 0; /* Align to the top */
     left: 300px; /* Align to the left */
     bottom: 0; /* Occupy full height */
-  }
-  
-  .ql-container {
-    height: calc(100vh - 84px);
     display: flex;
     flex-direction: column;
   }
+  .quill {
+    height: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+  }
+  .ql-container {
+    display: flex;
+    flex-grow: 1;
+    height: calc(100%);
+    overflow: auto;
+  }
   
   .ql-toolbar {
-    height: 40px;
-    overflow: hidden;
+    display: flex;
+    flex-grow: 1;
   }
   .ql-editor {
-    flex: 1;
+    width: calc(100%);
     overflow-y: auto;
-    font-size: 16px; /* Default font size */
+    font-size: 18px; /* Default font size */
     color: #333;    /* Default font color */
   }
   
