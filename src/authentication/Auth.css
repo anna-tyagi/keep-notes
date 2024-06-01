@@ -1,20 +1,4 @@
-/* Resetting default styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(45deg, #2c3e50, #3498db);
-    overflow: hidden; /* Prevent scrolling */
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+
   .login-container {
     display: flex;
     flex-direction: row;
@@ -42,6 +26,7 @@
     font-size: 1.2rem;
     margin-bottom: 2rem;
     opacity: 0.9;
+    animation: fadeInLeft 1s ease;
   }
   
   .create-account-link {
@@ -51,9 +36,11 @@
     text-decoration: none;
     border-bottom: 1px solid #ffffff;
     transition: border-color 0.3s;
+    animation: fadeInLeft 1s ease;
   }
   .login-box {
     flex: 1;
+    width: 10vw;
     background: linear-gradient(45deg, #ffffff, #f6f6f6);
     padding: 2rem;
     border-radius: 8px;

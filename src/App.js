@@ -5,6 +5,7 @@ import Sidebar from './sidebar/Sidebar';
 import './App.css';
 import LoginPage from './authentication/LoginPage';
 import SignupPage from './authentication/Signup';
+import Editor from './editor/Editor';
 
 const App = () => {
   return (
@@ -15,7 +16,7 @@ const App = () => {
           <Route path="/notes" element={
             <div className="main-content">
               <Sidebar />
-              {/* <Note /> */}
+              <Editor />
             </div>
           } />
         </Routes>
