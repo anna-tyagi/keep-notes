@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaUserCircle, FaSave, FaExclamationTriangle } from 'react-icons/fa';
 import './Header.css';
 
-const Header = ({ title, onLogout, hasUnsavedChanges }) => {
+const Header = ({ title, onLogout, hasUnsavedChanges, handleSaveNote }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const toggleDropdown = () => {
@@ -13,11 +13,11 @@ const Header = ({ title, onLogout, hasUnsavedChanges }) => {
         <div className="main-header">
             <h1 className="main-header-title">{title}</h1>
             <div className="main-header-icons">
-                <div className="save-icon">
+                <div className="save-icon" onClick={handleSaveNote}>
                     {hasUnsavedChanges ? (
-                        <FaExclamationTriangle size={26} color="red" />
-                    ) : (
                         <FaSave size={26} color="green" />
+                    ):(
+                        <div></div>
                     )}
                 </div>
                 <div className="account-icon" onClick={toggleDropdown}>

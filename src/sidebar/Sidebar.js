@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import './Sidebar.css';
 import { FaCalendarAlt, FaTags, FaPlus } from 'react-icons/fa';
 
-const Sidebar = () => {
+const Sidebar = ({ notesList, selectedIndex, setSelectedIndex }) => {
   const [sortBy, setSortBy] = useState('date');
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleSortByChange = (value) => {
     setSortBy(value);
-    // Clear search query when switching sort options
     setSearchQuery('');
   };
 
+  const handleNoteClick = (index) => {
+    setSelectedIndex(index);
+  };
   return (
     <div className="sidebar">
       <div className="header">
         <h3>Notes</h3>
-        <div className="create-note">
+        <div className="create-note" onClick={() => handleNoteClick(-1)}>
           <FaPlus className="create-note-icon" />
           <span>New</span>
         </div>
@@ -43,16 +45,29 @@ const Sidebar = () => {
           </div>
         )}
       </div>
-        <h4 style={{'fontSize':'1.2rem', 'paddingBottom':'20px'}}>All Notes</h4>
+      <h4 style={{ fontSize: '1.2rem', paddingBottom: '20px' }}>All Notes</h4>
       <div className="notes-list">
         <div className="scrollable-notes">
-          {/* Dummy list for testing */}
-          {Array.from(Array(10).keys()).map((noteId) => (
-            <div key={noteId} className="note-item">
-              <h5>Note Title {noteId + 1}</h5>
-              <p>Note content goes here...</p>
+          {Array.isArray(notesList) && notesList.length > 0 ? (
+            notesList.map((note, index) => (
+              <div
+              key={index}
+              className={`note-item ${index === selectedIndex ? 'selected' : ''}`}
+              onClick={() => handleNoteClick(index)}
+            >
+              <div className="tags-container">
+                {note.tags.map((tag, tagIndex) => (
+                  <div key={tagIndex} className="tag">
+                    {tag}
+                  </div>
+                ))}
+              </div>
+              <h5>{note.date}</h5>
             </div>
-          ))}
+            ))
+          ) : (
+            <p>No notes found.</p>
+          )}
         </div>
       </div>
     </div>

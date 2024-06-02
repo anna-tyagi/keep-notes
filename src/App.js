@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import Sidebar from './sidebar/Sidebar';
 import './App.css';
 import LoginPage from './authentication/LoginPage';
 import SignupPage from './authentication/Signup';
@@ -48,14 +47,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<UnauthorizedRoute element={<LoginPage />} />} />
         <Route path="/signup" element={<UnauthorizedRoute element={<SignupPage />} />} />
-        <Route path="/notes" element={
-          <AuthorizedRoute element={
-            <div className="main-content">
-              <Sidebar />
-              <Editor />
-            </div>
-          } />
-        } />
+        <Route path="/notes" element={<AuthorizedRoute element={<Editor />} />} />
       </Routes>
 
     </Router>
