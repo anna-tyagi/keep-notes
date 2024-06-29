@@ -7,11 +7,58 @@ import './GiftCard.css';
 import { getDatabase, ref, get, update, push, serverTimestamp, set } from 'firebase/database';
 import Authentication from '../firebase/authentication';
 import { getApp } from 'firebase/app';
+import NotesDatabase from '../firebase/notesDatabase';
 
-const GiftCard = ({ cards }) => {
+import im1 from './im1.jpg';
+import im2 from './im2.jpg';
+import im3 from './im3.jpg';
+
+const GiftCard = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const imgs = [
+        'https://t4.ftcdn.net/jpg/02/45/03/61/360_F_245036112_Lf5C4B2zfWbVGoF1rHAj7IFdLFiSXDQj.jpg',
+        'https://banner2.cleanpng.com/20180616/ihf/kisspng-paint-net-violet-barnali-bagchi-5b25c140a583d6.815373661529200960678.jpg',
+        im1,
+        im2,
+        im3
+    ]
+    const [cards, setCards] = useState([
+        {
+          image: 'https://t4.ftcdn.net/jpg/02/45/03/61/360_F_245036112_Lf5C4B2zfWbVGoF1rHAj7IFdLFiSXDQj.jpg',
+          text: '',
+        },
+        {
+          image: 'https://banner2.cleanpng.com/20180616/ihf/kisspng-paint-net-violet-barnali-bagchi-5b25c140a583d6.815373661529200960678.jpg',
+          text: '',
+        },
+        {
+          image: im1,
+          text: '',
+        },
+        {
+          image: im2,
+          text: '',
+        },
+        {
+          image: im3,
+          text: '',
+        }
+      ]);
 
+    let db = new NotesDatabase();
     useEffect(() => {
+        db.getCards().then((res) => {
+          // Assuming res is already formatted correctly
+          setCards(res.map((text, index) => ({
+            image: imgs[index] || '', // Map images to cards, default to empty if index is out of bounds
+            text: text || '', // Default to empty string if text is undefined
+        })));
+        }).catch((e) => {
+          console.error(e);
+        });
+      }, []);
+    useEffect(() => {
+        console.log(cards);
         const timer = setTimeout(() => {
             setIsOpen(true);
         }, 1000);

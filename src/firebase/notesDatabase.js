@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import firebaseConfig from "./firebaseConfig";
-import { collection, getDocs, getFirestore, orderBy, query, addDoc, doc, limit, startAfter, setDoc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, orderBy, query, addDoc, doc, limit, startAfter, setDoc, getDoc } from "firebase/firestore";
 import Authentication from "./authentication";
 import { NotesConverter, NotesSchema } from "./databaseSchemas";
 import { resolvePath } from "react-router-dom";
@@ -33,8 +33,26 @@ class NotesDatabase {
 
                 // Get the last visible document
                 const lastVisibleDoc = snapshot.docs[snapshot.docs.length - 1];
-                
+
                 resolve({ notes: notesList, lastVisible: lastVisibleDoc });
+            }).catch(e => {
+                reject(e);
+            });
+        });
+    }
+
+    getCards() {
+        const cardsDocRef = doc(this.db, 'love', 'cards');
+
+        return new Promise((resolve, reject) => {
+            getDoc(cardsDocRef).then(docSnapshot => {
+                if (docSnapshot.exists()) {
+                    const data = docSnapshot.data();
+                    const cardsList = data.cards || []; // Assuming the list of strings is stored under the 'cards' field
+                    resolve(cardsList);
+                } else {
+                    reject(new Error('Document does not exist'));
+                }
             }).catch(e => {
                 reject(e);
             });
@@ -52,13 +70,13 @@ class NotesDatabase {
                     res(res);
                 }).catch((e) => {
                     reject(e);
-            });
+                });
             })
-            
+
         } else {
             return new Promise((res, reject) => {
-                addDoc(userCollection, note).then(() => {res(res)})
-                .catch((e) => reject(e));
+                addDoc(userCollection, note).then(() => { res(res) })
+                    .catch((e) => reject(e));
             })
         }
     }
