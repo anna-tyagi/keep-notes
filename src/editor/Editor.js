@@ -1,10 +1,7 @@
-// Editor.js
 import React, { useEffect, useRef, useState } from 'react';
-import ReactQuill, { Quill } from 'react-quill';
+import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './Editor.css';
-
-// Import the necessary Quill modules for syntax highlighting
 import hljs from 'highlight.js';
 import 'highlight.js/styles/monokai-sublime.css';
 import Header from '../component/Header';
@@ -16,17 +13,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingComponent from '../component/loading';
 
-// Register the modules
-// Quill.register('modules/syntax', true);
-
 const Editor = () => {
   const [content, setContent] = useState('');
   const [savedNote, setSavedNote] = useState('');
   const quillRef = useRef(null);
-
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const unsavedChangesRef = useRef(unsavedChanges);
   const [date, setDate] = useState('');
-
+  const [todaysDate, setTodaysDate] = useState('');
   const [notesList, setNotesList] = useState(null);
   const [index, setSelectedIndex] = useState(-1);
 
@@ -34,27 +28,32 @@ const Editor = () => {
   const db = new NotesDatabase();
   let navigate = useNavigate();
 
+  // loads all notes for sidebar
   useEffect(() => {
-    // if (notesList === null) {
-    db.getNotesBatch().then((res) => {
-      if (res === null) {
-        setNotesList([]);
-      }
-      else
-        setNotesList(res.notes);
-      res.notes.map((notee, indexx) => {
-        if (notee.note === content) {
-          setSelectedIndex(indexx);
-        }
-      });
-    }).catch((e) => {
-      toast.error(e);
-    })
+    db.getNotesBatch()
+        .then((res) => {
+          if (res === null) {
+            setNotesList([]);
+          } else {
+            setNotesList(res.notes);
+          }
+          res.notes.forEach((notee, indexx) => {
+            if (notee.note === content) {
+              setSelectedIndex(indexx);
+            }
+          });
+        })
+        .catch((e) => {
+          toast.error(e);
+        });
   }, [savedNote]);
 
+  // Update the ref whenever unsavedChanges changes
   useEffect(() => {
-    setUnsavedChanges(content !== savedNote);
-  }, [savedNote, content]);
+    unsavedChangesRef.current = unsavedChanges;
+  }, [unsavedChanges]);
+
+  // load today's date
   useEffect(() => {
     const today = new Date();
     const yesterday = new Date();
@@ -62,17 +61,15 @@ const Editor = () => {
 
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
 
-    const isToday = (someDate) => {
-      return someDate.getDate() === today.getDate() &&
+    const isToday = (someDate) =>
+        someDate.getDate() === today.getDate() &&
         someDate.getMonth() === today.getMonth() &&
         someDate.getFullYear() === today.getFullYear();
-    };
 
-    const isYesterday = (someDate) => {
-      return someDate.getDate() === yesterday.getDate() &&
+    const isYesterday = (someDate) =>
+        someDate.getDate() === yesterday.getDate() &&
         someDate.getMonth() === yesterday.getMonth() &&
         someDate.getFullYear() === yesterday.getFullYear();
-    };
 
     const formatDate = (someDate) => {
       if (isToday(someDate)) {
@@ -84,23 +81,39 @@ const Editor = () => {
       }
     };
 
-    const formattedDate = formatDate(today);
-    setDate(formattedDate);
+    setTodaysDate(formatDate(today));
+    setDate(formatDate(today));
   }, []);
 
+  // // save notes automatically if there is any change every one minute
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     console.log("Checking for unsaved changes...");
+  //     if (unsavedChangesRef.current) {
+  //       console.log("Unsaved changes found, saving note...");
+  //       saveNote();
+  //     }
+  //   }, 3000); // 60000 milliseconds = 1 minute
+  //
+  //   return () => clearInterval(interval); // Cleanup the interval on component unmount
+  // }, []);
+
+  // get today's date
   const getFormattedDate = () => {
     const today = new Date();
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Intl.DateTimeFormat('en-US', options).format(today);
   };
+
   const handleContentChange = (value) => {
     setContent(value);
+    setUnsavedChanges(true); // Set unsaved changes to true when content changes
   };
 
   const handleLogout = () => {
     auth.logout().then(() => {
-      return navigate('/');
-    })
+      navigate('/');
+    });
     console.log('Logged out');
   };
 
@@ -111,78 +124,87 @@ const Editor = () => {
     return headings;
   };
 
+  // save note
   const saveNote = () => {
     const headings = getHeadings(content);
     const tags = headings.map((heading) => heading.textContent);
-    const cdate = getFormattedDate();
     if (index >= 0) {
-      db.saveNote(content, cdate, tags, notesList[index].id).then(() => {
-        setSavedNote(content);
-      }).catch((e) => {
-        toast.error(e);
-        console.log(e);
-      });
-    }
-    else {
-      db.saveNote(content, cdate, tags).then(() => {
-        setSavedNote(content);
-      }).catch((e) => {
-        toast.error(e);
-        console.log(e);
-      });
-    }
-  }
+      db.saveNote(content, date, tags, notesList[index].id)
+          .then(() => {
+            setSavedNote(content);
+            setUnsavedChanges(false); // Set unsaved changes to false after saving
+          })
+          .catch((e) => {
+            toast.error(e);
+            console.log(e);
+          });
+    } else {
 
-  const handleSelectedIndex = (index) => {
+      console.log("save2",content)
+      db.saveNote(content, date, tags)
+          .then(() => {
+            setSavedNote(content);
+            setUnsavedChanges(false); // Set unsaved changes to false after saving
+          })
+          .catch((e) => {
+            toast.error(e);
+            console.log(e);
+          });
+    }
+  };
+
+  const handleNoteSelection = (index) => {
     setSelectedIndex(index);
     if (index < 0) {
       setContent('');
       setSavedNote('');
-    }
-    else {
+      setDate(todaysDate);
+    } else {
       setContent(notesList[index].note);
       setSavedNote(notesList[index].note);
+      setDate(notesList[index].date);
     }
-    setUnsavedChanges(false);
-  }
+  };
 
   if (notesList === null) {
-    return (
-      <LoadingComponent />
-    );
+    return <LoadingComponent />;
   }
-  return (
-    <div className="main-content">
-      <Sidebar notesList={notesList} selectedIndex={index} setSelectedIndex={handleSelectedIndex} />
-      <div className="editor">
-        <Header title={date} onLogout={handleLogout} hasUnsavedChanges={unsavedChanges} handleSaveNote={saveNote} />
-        <ReactQuill
-          ref={quillRef}
-          value={content}
-          onChange={handleContentChange}
-          modules={Editor.modules}
-          formats={Editor.formats}
-        />
-      </div>
-      <ToastContainer />
-    </div>
 
+  return (
+      <div className="main-content">
+        <Sidebar notesList={notesList} selectedIndex={index} setSelectedIndex={handleNoteSelection} />
+        <div className="editor">
+          <Header
+              title={date}
+              onLogout={handleLogout}
+              hasUnsavedChanges={unsavedChanges}
+              handleSaveNote={saveNote}
+          />
+          <ReactQuill
+              ref={quillRef}
+              value={content}
+              onChange={handleContentChange}
+              modules={Editor.modules}
+              formats={Editor.formats}
+          />
+        </div>
+        <ToastContainer />
+      </div>
   );
 };
 
 Editor.modules = {
   toolbar: [
-    [{ 'header': '1' }, { 'header': '2' }], [],
-    [{ 'font': [] }, { 'size': [] }], [],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'], [],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }, [],
-    { 'indent': '-1' }, { 'indent': '+1' }], [],
-    ['link', 'image', 'video', 'code-block'], [],
+    [{ 'header': '1' }, { 'header': '2' }],
+    [{ 'font': [] }, { 'size': [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    ['link', 'image', 'video', 'code-block'],
     ['clean']
   ],
   syntax: {
-    highlight: text => hljs.highlightAuto(text).value,
-  }
+    highlight: (text) => hljs.highlightAuto(text).value,
+  },
 };
 
 Editor.formats = [
