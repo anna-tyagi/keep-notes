@@ -85,18 +85,9 @@ const Editor = () => {
     setDate(formatDate(today));
   }, []);
 
-  // // save notes automatically if there is any change every one minute
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     console.log("Checking for unsaved changes...");
-  //     if (unsavedChangesRef.current) {
-  //       console.log("Unsaved changes found, saving note...");
-  //       saveNote();
-  //     }
-  //   }, 3000); // 60000 milliseconds = 1 minute
-  //
-  //   return () => clearInterval(interval); // Cleanup the interval on component unmount
-  // }, []);
+  const onTitleChange = (title) => {
+    setDate(title);
+  }
 
   // get today's date
   const getFormattedDate = () => {
@@ -179,6 +170,7 @@ const Editor = () => {
               onLogout={handleLogout}
               hasUnsavedChanges={unsavedChanges}
               handleSaveNote={saveNote}
+              onTitleChange={onTitleChange}
           />
           <ReactQuill
               ref={quillRef}
